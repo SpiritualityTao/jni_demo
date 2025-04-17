@@ -1,0 +1,45 @@
+package {
+    default_applicable_licenses: ["Android-Apache-2.0"],
+}
+
+cc_library_shared {
+    name: "libdm_socket_jni",
+    srcs: [
+        "JniLoader.cpp",
+        "dm_socket_jni.c",
+    ],  
+    // compile_multilib: "64",
+
+    shared_libs: [
+        "libandroid",
+        "libbase",
+        "libbinder_ndk",
+        "liblog",
+        "libnativehelper",
+        "libutils",
+        "libcutils",
+        "libdmsocket",
+    ],
+
+    //需要指定jni头文件
+	header_libs: ["jni_headers"],
+
+    //dmsocket库提供的头文件
+    include_dirs: [
+        "vendor/xwos/apps/dm-jni/libs/dm_socket/include",
+    ],
+
+    strip: {
+        keep_symbols: true,
+    },  
+
+    cflags: [
+        "-DLOG_TAG=\"DmSocketJni\"",
+        "-Wall",
+        "-Werror",
+        "-Wunused",
+        "-Wunused-parameter",
+        "-Wunreachable-code",
+        "-fvisibility=hidden",
+    ],  
+}

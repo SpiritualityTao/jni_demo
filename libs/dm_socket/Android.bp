@@ -1,0 +1,11 @@
+cc_prebuilt_library_shared {
+    name: "libdmsocket",
+    arch: {
+        arm: {
+            srcs: ["armeabi-v7a/libdmsocket.so"],
+        },
+        arm64: {
+            srcs: ["arm64-v8a/libdmsocket.so"],
+        },
+    },
+}
