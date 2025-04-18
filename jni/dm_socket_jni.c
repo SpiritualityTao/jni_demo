@@ -119,6 +119,7 @@ static jint nativeDmSocketInit(JNIEnv* env, jclass clazz, jstring receiveSockPat
         .reserved = {0}
     };
 
+    memset(&c_callbacks, 0, sizeof(c_callbacks));
     // 调用底层函数
     int result = dm_socket_init(recv_path, send_path, callbacks ? &c_callbacks : NULL);
     
@@ -138,10 +139,28 @@ static void nativeDmSocketDestroy(JNIEnv* env, jclass clazz) {
     }
 }
 
+static int nativeSendMessage(JNIEnv *env, jclass clazz, jstring jmessage) {
+    (void)clazz;
+    // 1. 将jstring转换为C字符串
+    const char *c_message = (*env)->GetStringUTFChars(env, jmessage, NULL);
+    if (c_message == NULL) {
+        return -1; // 内存不足
+    }
+
+    // 2. 调用底层函数
+    int ret = dm_socket_send_message(c_message);
+
+    // 3. 释放字符串资源
+    (*env)->ReleaseStringUTFChars(env, jmessage, c_message);
+
+    return ret;
+}
+
 // JNI 注册方法
 static JNINativeMethod gMethods[] = {
     {"nativeDmSocketInit", "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/Object;)I", (void*)nativeDmSocketInit},
     {"nativeDmSocketDestroy", "()V", (void*)nativeDmSocketDestroy},
+    {"nativeSendMessage", "(Ljava/lang/String;)I", (void*)nativeSendMessage},
 };
 
 // 动态注册 native 方法
@@ -152,7 +171,7 @@ jint initializeDmSocket(JavaVM* vm) {
         return JNI_ERR;
     }
     // 根据要求挂载到 Java 类 package/class/name
-    jclass clazz = (*env)->FindClass(env, ">>>package/class/name");
+    jclass clazz = (*env)->FindClass(env, "com/starkylin/dmmanager/base/DMSocketManager");
     if (clazz == NULL) {
         return JNI_ERR;
     }
@@ -163,3 +182,4 @@ jint initializeDmSocket(JavaVM* vm) {
     }
     return JNI_VERSION_1_6;
 }
+
