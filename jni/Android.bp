@@ -3,7 +3,7 @@ package {
 }
 
 cc_library_shared {
-    name: "libdm_socket_jni",
+    name: "libdmsocketjni",
     srcs: [
         "JniLoader.cpp",
         "dm_socket_jni.c",
@@ -18,7 +18,7 @@ cc_library_shared {
         "libnativehelper",
         "libutils",
         "libcutils",
-        "libdmsocket",
+        "libdm_socket",
     ],
 
     //需要指定jni头文件
@@ -26,7 +26,7 @@ cc_library_shared {
 
     //dmsocket库提供的头文件
     include_dirs: [
-        "vendor/xwos/apps/dm-jni/libs/dm_socket/include",
+        "vendor/xwos/apps/StarKylinDmManager/native/include",
     ],
 
     strip: {
@@ -41,5 +41,5 @@ cc_library_shared {
         "-Wunused-parameter",
         "-Wunreachable-code",
         "-fvisibility=hidden",
-    ],  
+    ],
 }
